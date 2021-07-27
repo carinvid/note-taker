@@ -4,6 +4,10 @@ const path = require("path");
 const fs = require("fs");
 const PORT = process.env.PORT || 3001;
 
+app.listen(PORT, function () {
+  console.log("App listening on PORT " + PORT);
+});
+
 const notesArray = require("./db/db.json");
 
 app.use(express.urlencoded({ extended: true }));
@@ -11,31 +15,32 @@ app.use(express.json());
 
 app.use(express.static(__dirname + "/public"));
 
-app.listen(PORT, function () {
-  console.log("App listening on PORT " + PORT);
-});
-
-app.get("/", function (req, res) {
+app.get("/", function (req, res, next) {
   res.sendFile(path.join(__dirname, "public/index.html"));
 });
 
-app.get("/notes", function (req, res) {
+app.get("/notes", function (req, res, next) {
   res.sendFile(path.join(__dirname, "public/notes.html"));
 });
 
-app.get("/api/notes", function (req, res) {
+app.get("/api/notes", function (req, res, next) {
   return res.json(JSON.parse(fs.readFileSync("./db/db.json")));
+  if (result) {
+    res.json(result);
+  } else {
+    res.send(404);
+  }
 });
 
-//route and adding a new notes
+//route
 
-app.post("/api/notes", function (req, res) {
-  let newNoteRequest = req.body;
-  console.log("New request: ", newNoteRequest);
+app.post("/api/notes", function (req, res, next) {
+  let newNoteadded = req.body;
+  console.log("New note add: ", newNoteadded);
 
-  notesArray.push(newNoteRequest);
+  notesArray.push(newNoteadded);
 
-  newNoteRequest.id = notesArray.indexOf(newNoteRequest);
+  newNoteadded.id = notesArray.indexOf(newNoteadded);
 
   fs.writeFileSync("./db/db.json", JSON.stringify(notesArray));
 
@@ -48,18 +53,16 @@ app.post("/api/notes", function (req, res) {
   });
 });
 
-//deleting
+//for deleting
 app.delete("/api/notes/:id", function (req, res) {
-  // id is index of note in notesArray
   let id = parseInt(req.params.id);
-  // Use id index to remove item from notesArray
-  let removeItemArray = notesArray.filter((item) => item.id != id);
+  let deletingNote = notesArray.filter((item) => item.id != id);
 
-  removeItemArray.forEach(
-    (element) => (element.id = removeItemArray.indexOf(element))
+  deletingNote.forEach(
+    (element) => (element.id = deletingNote.indexOf(element))
   );
 
-  fs.writeFileSync("./db/db.json", JSON.stringify(removeItemArray));
+  fs.writeFileSync("./db/db.json", JSON.stringify(deletingNote));
 
   res.json({
     isError: false,
