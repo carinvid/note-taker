@@ -8,7 +8,9 @@ const app = express();
 
 const notesArray = require("./db/db.json");
 
+// parse incoming string or array data
 app.use(express.urlencoded({ extended: true }));
+// parse incoming JSON data
 app.use(express.json());
 
 app.use(express.static(__dirname + "/public"));
@@ -39,13 +41,10 @@ app.listen(PORT, function () {
 app.post("/api/notes", function (req, res, next) {
   let newNoteadded = req.body;
   console.log("New note added: ", newNoteadded);
-
   notesArray.push(newNoteadded);
-
   newNoteadded.id = notesArray.indexOf(newNoteadded);
 
   fs.writeFileSync("./db/db.json", JSON.stringify(notesArray));
-
   res.json({
     isError: false,
     message: "your notes was saved",
@@ -54,6 +53,19 @@ app.post("/api/notes", function (req, res, next) {
     success: true,
   });
 });
+
+//
+// app
+//   .route("/note")
+//   .get(function (req, res) {
+//     res.send("Get a random note");
+//   })
+//   .post(function (req, res) {
+//     res.send("Add a note");
+//   })
+//   .put(function (req, res) {
+//     res.send("Update the note");
+//   });
 
 //for deleting
 app.delete("/api/notes/:id", function (req, res, next) {
@@ -65,7 +77,6 @@ app.delete("/api/notes/:id", function (req, res, next) {
   );
 
   fs.writeFileSync("./db/db.json", JSON.stringify(deletingNote));
-
   res.json({
     isError: false,
     message: "your note was deleted",
