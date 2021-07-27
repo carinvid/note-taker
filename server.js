@@ -1,12 +1,10 @@
 const express = require("express");
-const app = express();
+
 const path = require("path");
 const fs = require("fs");
-const PORT = process.env.PORT || 3001;
 
-app.listen(PORT, function () {
-  console.log("App listening on PORT " + PORT);
-});
+const PORT = process.env.PORT || 3001;
+const app = express();
 
 const notesArray = require("./db/db.json");
 
@@ -25,18 +23,22 @@ app.get("/notes", function (req, res, next) {
 
 app.get("/api/notes", function (req, res, next) {
   return res.json(JSON.parse(fs.readFileSync("./db/db.json")));
-  if (result) {
-    res.json(result);
-  } else {
-    res.send(404);
-  }
+  //   if (result) {
+  //     res.json(result);
+  //   } else {
+  //     res.send(404);
+  //   }
+});
+
+app.listen(PORT, function () {
+  console.log("App listening on PORT " + PORT);
 });
 
 //route
 
 app.post("/api/notes", function (req, res, next) {
   let newNoteadded = req.body;
-  console.log("New note add: ", newNoteadded);
+  console.log("New note added: ", newNoteadded);
 
   notesArray.push(newNoteadded);
 
@@ -46,7 +48,7 @@ app.post("/api/notes", function (req, res, next) {
 
   res.json({
     isError: false,
-    message: "Successfully saved",
+    message: "your notes was saved",
     port: PORT,
     status: 200,
     success: true,
@@ -54,7 +56,7 @@ app.post("/api/notes", function (req, res, next) {
 });
 
 //for deleting
-app.delete("/api/notes/:id", function (req, res) {
+app.delete("/api/notes/:id", function (req, res, next) {
   let id = parseInt(req.params.id);
   let deletingNote = notesArray.filter((item) => item.id != id);
 
@@ -66,7 +68,7 @@ app.delete("/api/notes/:id", function (req, res) {
 
   res.json({
     isError: false,
-    message: "Successfully deleted",
+    message: "your note was deleted",
     port: PORT,
     status: 200,
     success: true,
