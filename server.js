@@ -45,13 +45,7 @@ app.post("/api/notes", function (req, res, next) {
   newNoteadded.id = notesArray.indexOf(newNoteadded);
 
   fs.writeFileSync("./db/db.json", JSON.stringify(notesArray));
-  res.json({
-    isError: false,
-    message: "your notes was saved",
-    port: PORT,
-    status: 200,
-    success: true,
-  });
+  res.json(JSON.parse(fs.readFileSync("./db/db.json")));
 });
 
 //
@@ -77,11 +71,5 @@ app.delete("/api/notes/:id", function (req, res, next) {
   );
 
   fs.writeFileSync("./db/db.json", JSON.stringify(deletingNote));
-  res.json({
-    isError: false,
-    message: "your note was deleted",
-    port: PORT,
-    status: 200,
-    success: true,
-  });
+  res.json(JSON.parse(fs.readFileSync("./db/db.json")));
 });
