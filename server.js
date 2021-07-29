@@ -32,10 +32,6 @@ app.get("/api/notes", function (req, res, next) {
   //   }
 });
 
-app.listen(PORT, function () {
-  console.log("App listening on PORT  " + PORT);
-});
-
 //route
 
 app.post("/api/notes", function (req, res, next) {
@@ -67,5 +63,9 @@ app.delete("/api/notes/:id", function (req, res, next) {
   notesArray = notesArray.filter((item) => item.id != id);
 
   fs.writeFileSync("./db/db.json", JSON.stringify(notesArray));
-  res.json(JSON.parse(fs.readFileSync("./db/db.json")));
+  res.json(notesArray);
+});
+
+app.listen(PORT, function () {
+  console.log("App listening on PORT  " + PORT);
 });
