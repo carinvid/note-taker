@@ -33,7 +33,7 @@ app.get("/api/notes", function (req, res, next) {
 });
 
 app.listen(PORT, function () {
-  console.log("App listening on PORT " + PORT);
+  console.log("App listening on PORT  " + PORT);
 });
 
 //route
