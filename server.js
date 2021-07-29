@@ -6,7 +6,7 @@ const fs = require("fs");
 const PORT = process.env.PORT || 3001;
 const app = express();
 
-const notesArray = require("./db/db.json");
+let notesArray = require("./db/db.json");
 
 // parse incoming string or array data
 app.use(express.urlencoded({ extended: true }));
@@ -24,7 +24,7 @@ app.get("/notes", function (req, res, next) {
 });
 
 app.get("/api/notes", function (req, res, next) {
-  return res.json(JSON.parse(fs.readFileSync("./db/db.json")));
+  res.json(notesArray);
   //   if (result) {
   //     res.json(result);
   //   } else {
@@ -45,7 +45,7 @@ app.post("/api/notes", function (req, res, next) {
   newNoteadded.id = notesArray.indexOf(newNoteadded);
 
   fs.writeFileSync("./db/db.json", JSON.stringify(notesArray));
-  res.json(JSON.parse(fs.readFileSync("./db/db.json")));
+  res.json(notesArray);
 });
 
 //
@@ -64,7 +64,7 @@ app.post("/api/notes", function (req, res, next) {
 //for deleting
 app.delete("/api/notes/:id", function (req, res, next) {
   let id = parseInt(req.params.id);
-  let deletingNote = notesArray.filter((item) => item.id != id);
+  notesArray = notesArray.filter((item) => item.id != id);
 
   deletingNote.forEach(
     (element) => (element.id = deletingNote.indexOf(element))
