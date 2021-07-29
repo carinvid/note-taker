@@ -1,5 +1,5 @@
 const express = require("express");
-
+const { v4: uuidv4 } = require("uuid");
 const path = require("path");
 const fs = require("fs");
 
@@ -40,9 +40,9 @@ app.listen(PORT, function () {
 
 app.post("/api/notes", function (req, res, next) {
   let newNoteadded = req.body;
+  newNoteadded.id = uuidv4();
   console.log("New note added: ", newNoteadded);
   notesArray.push(newNoteadded);
-  newNoteadded.id = notesArray.indexOf(newNoteadded);
 
   fs.writeFileSync("./db/db.json", JSON.stringify(notesArray));
   res.json(notesArray);
@@ -66,10 +66,6 @@ app.delete("/api/notes/:id", function (req, res, next) {
   let id = parseInt(req.params.id);
   notesArray = notesArray.filter((item) => item.id != id);
 
-  deletingNote.forEach(
-    (element) => (element.id = deletingNote.indexOf(element))
-  );
-
-  fs.writeFileSync("./db/db.json", JSON.stringify(deletingNote));
+  fs.writeFileSync("./db/db.json", JSON.stringify(notesArray));
   res.json(JSON.parse(fs.readFileSync("./db/db.json")));
 });
