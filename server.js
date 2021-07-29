@@ -59,7 +59,7 @@ app.post("/api/notes", function (req, res, next) {
 
 //for deleting
 app.delete("/api/notes/:id", function (req, res, next) {
-  let id = parseInt(req.params.id);
+  let id = req.params.id;
   notesArray = notesArray.filter((item) => item.id != id);
 
   fs.writeFileSync("./db/db.json", JSON.stringify(notesArray));
