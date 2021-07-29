@@ -12,6 +12,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "inquirer": "^8.1.2",
-    "path-parse": "^1.0.7"
+    "path-parse": "^1.0.7",
+    "uuid": "^8.3.2"
   }
 }
